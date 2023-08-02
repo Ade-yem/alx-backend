@@ -3,8 +3,6 @@
 
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
-from pytz import timezone
-import pytz
 from typing import Union, Dict
 
 app = Flask(__name__)
@@ -22,7 +20,7 @@ app.config.from_object(Config)
 
 
 @babel.localeselector
-def get_locale() -> str:
+def get_locale():
     """Get locale language code"""
     locale = request.args.get('locale', None)
     if locale in app.config['LANGUAGES']:
