@@ -1,5 +1,3 @@
-// 0-redis_op.js
-
 import { createClient } from 'redis';
 
 // Create a Redis client instance connecting to localhost
@@ -11,4 +9,15 @@ client.on('connect', () => {
 
 client.on('error', (error) => {
   console.error('Redis client not connected to the server:', error);
+});
+
+// subscribing to a channel
+
+client.subscribe('holberton school channel');
+client.on('message', (channel, message) => {
+  console.log(message);
+  if (message === 'KILL_SERVER') {
+    client.unsubscribe(channel);
+    client.quit();
+  }
 });

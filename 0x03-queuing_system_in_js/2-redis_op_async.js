@@ -1,6 +1,7 @@
 // 1-redis_op.js
 
 import { createClient, print } from 'redis';
+import { promisify } from 'util';
 
 // Create a Redis client instance connecting to localhost
 const client = createClient({});
@@ -12,15 +13,14 @@ client.on('connect', () => {
 client.on('error', (error) => {
   console.error('Redis client not connected to the server:', error);
 });
+const get = promisify(client.get).bind(client);
 
 const setNewSchool = (schoolName, value) => {
   client.set(schoolName, value, print);
 };
-const displaySchoolValue = (schoolName) => {
-  client.get(schoolName, (error, value) => {
-    if (error) throw error;
-    else console.log(value);
-  });
+const displaySchoolValue = async (schoolName) => {
+  await get(schoolName)
+    .then((res) => console.log(res)).catch(err => console.log(err));
 };
 
 displaySchoolValue('Holberton');
